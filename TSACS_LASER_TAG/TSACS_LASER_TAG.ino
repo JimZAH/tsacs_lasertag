@@ -30,7 +30,7 @@ int lc = 0;
 int fw_version = 1;
 bool learn = false;
 int n = 0;
-int occ[4][4]={
+int occ[4][2]={
     {0,0},
     {0,0},
     {0,0},
