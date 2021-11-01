@@ -174,7 +174,7 @@ void loop() {
 
   // Grab valid codes from memory.
   if (valid_codes[0] == 0){
-    for (int i=0; i<=30; i++){
+    for (int i=0; sizeof(valid_codes)/2; i++){
       valid_codes[i] = readCodes(ADDRESS+=2);
       Serial.print(i);
       Serial.print(" CODES: ");
@@ -258,7 +258,10 @@ int readCodes(int address){
 }
 
 void writeCodes(int address, int number){
-
+  if (number > 65535){
+    Serial.println("ERROR: Sorry this code exceeds memory size limit. Please try again.");
+    return;
+  }
     byte b1 = (number >> 8) & 0xFF;
     byte b2 = number & 0xFF;
     
