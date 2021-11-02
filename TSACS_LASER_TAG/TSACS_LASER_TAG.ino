@@ -25,7 +25,6 @@ int RADDRESS = CODE_COUNT_ADDRESS;
 bool alarm = false;
 int bytes = 0;
 byte cc = 0;
-uint8_t input[30];
 int lc = 0;
 int fw_version = 1;
 bool learn = false;
@@ -154,12 +153,10 @@ void learnCodes(){
     if (cc >= MAX_CODES){
       Serial.println("ERROR: You have reach the maximum stored valid codes!"); //TODO: Give user option to clear these.
     } else {
-      //TODO: EEPROM is not inc on code store
       Serial.print("Current code count: ");
       ADDRESS += 2;
-      writeCodes(ADDRESS, wn);
       cc++;
-      EEPROM.put(CODE_COUNT_ADDRESS, cc);
+      (writeCodes(ADDRESS, wn)) ? ADDRESS -= 2 : EEPROM.put(CODE_COUNT_ADDRESS, cc);
       Serial.println(cc,DEC);
     }
 }
@@ -257,10 +254,10 @@ int readCodes(int address){
   
 }
 
-void writeCodes(int address, int number){
+int writeCodes(int address, int number){
   if (number > 65535){
     Serial.println("ERROR: Sorry this code exceeds memory size limit. Please try again.");
-    return;
+    return -1;
   }
     byte b1 = (number >> 8) & 0xFF;
     byte b2 = number & 0xFF;
@@ -268,4 +265,5 @@ void writeCodes(int address, int number){
     EEPROM.update(address, b1);
     EEPROM.update(address+1, b2);
     
+    return 0;
 }
